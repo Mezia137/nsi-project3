@@ -113,13 +113,13 @@ def interface(t, chemin):
 	t.goto(ox, 0)
 	t.end_fill()
 	
-	t.fillcolor("cyan")
-	t.begin_fill()
-	t.goto(ox-p, -10)
-	t.goto(p*(len(chemin)+2), -10)
-	t.goto(p*(len(chemin)+1), 0)
-	t.goto(ox, 0)
-	t.end_fill()
+	#t.fillcolor("cyan")
+	#t.begin_fill()
+	#t.goto(ox-p, -10)
+	#t.goto(p*(len(chemin)+2), -10)
+	#t.goto(p*(len(chemin)+1), 0)
+	#t.goto(ox, 0)
+	#t.end_fill()
 
 	t.penup()
 		
