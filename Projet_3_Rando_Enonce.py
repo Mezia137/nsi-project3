@@ -1,9 +1,23 @@
 from random import randint
 import turtle
 import math
-
+import numpy as np
 # Les fonctions pré-programmées sur les listes (count, max, etc...) sont INTERDITES
 # Seule l'utilisation de la fonction len() est autorisée !
+
+import argparse
+parser = argparse.ArgumentParser(
+                    prog = 'ProgramName',
+                    description = 'What the program does',
+                    epilog = 'Text at the bottom of help')
+
+
+parser.add_argument('-n', '--npoints',default=10,type=int)      # option that takes a value
+parser.add_argument('-l', '--length',default=10,type=int)      # option that takes a value
+parser.add_argument('-m', '--minvalue',default=10,type=int)      # option that takes a value
+parser.add_argument('-M', '--Maxvalue',default=25,type=int)      # option that takes a value
+parser.add_argument('-d', '--drawmode',default='turtle',type=str)      # option that takes a value
+args = parser.parse_args()
 
 def test_denivele(tab):
 	"""
@@ -69,18 +83,18 @@ def temps_trajet(chemin):
 	chemin – liste d'entiers dont deux éléments successifs sont
 			 distincts.
 	Sortie : entier – temps de parcours de la liste
-	>>> temps_trajet([2, 3, 2, 5, 4])
+	>>> sum(temps_trajet([2, 3, 2, 5, 4]))
 	50
-	>>> temps_trajet([2, 8, 3, 8, 4, 8, 5, 6, 8])
+	>>> sum(temps_trajet([2, 8, 3, 8, 4, 8, 5, 6, 8]))
 	240
 	"""
-	t = 0
+	t = [0]
 	for i in range(len(chemin)-1):
 		d = chemin[i+1] - chemin[i]
 		if d < 0:
-			t += 5*(-d)
+			t.append(5*(-d))
 		else:
-			t += 10*d
+			t.append(10*d)
 			
 	return t
 
@@ -126,22 +140,49 @@ def interface(t, chemin):
 	
 	
 
-def main(args):
-	chemin = denivele(10, 10, 25)
+def main(n=args.npoints,min=args.minvalue,max=args.Maxvalue,drawmode=args.drawmode):
+	chemin = denivele(n, min, max)
 	print(f"Nombre de hauts sommets : {nb_hauts_sommets(chemin)[0]}")
 	print(f"Hauteur des hauts sommets : {nb_hauts_sommets(chemin)[1]}")
-	print(f"Temps prévu de la randonnée : {temps_trajet(chemin)}")
+	print(f"Temps prévu de la randonnée : {sum(temps_trajet(chemin))}")
 	print(f"Nombre de sommets : {nb_sommets(chemin)}")
-	
-	t = turtle.Turtle()
-	turtle.Screen().bgcolor("black")
-	t.pencolor("white")
-	t.pensize(1)
-	t.speed(0)
-	t.hideturtle()
-	t.penup()
-	interface(t, chemin)
-	turtle.exitonclick()
+
+	if drawmode=='turtle':
+		t = turtle.Turtle()
+		turtle.Screen().bgcolor("black")
+		t.pencolor("white")
+		t.pensize(1)
+		t.speed(0)
+		t.hideturtle()
+		t.penup()
+		interface(t, chemin)
+		turtle.exitonclick()
+
+	if drawmode=='plotly':
+		import plotly.graph_objects as go
+		from plotly.graph_objs.layout import YAxis,XAxis,Margin
+		layout = go.Layout(
+			title="Randonée",
+			xaxis=XAxis(
+				title="Distance"
+			),
+		xaxis2 = XAxis(
+			overlaying= 'x', 
+			dtick = 7,
+			title = 'Temps',
+			side= 'top',
+			),
+		yaxis=dict(
+			title="Hauteur"
+			),
+		)
+		fig = go.Figure()
+		fig.add_trace(go.Scatter(x=np.arange(args.npoints)*args.length/args.npoints,y=chemin,fill='tozeroy',mode="markers+text",textposition="top center", hovertemplate = 'Atlitude: %{y}m<extra></extra>',
+					text=['{:d} min'.format(int(t/60)) for t in np.cumsum(temps_trajet(chemin))]))
+		fig.update_layout(hovermode="x",title='Randonnée',yaxis_range=[0,3*np.max(chemin)])
+#		fig.add_trace(go.Scatter(x=np.cumsum(temps_trajet(chemin)),y=chemin,xaxis='x2'))
+		fig.write_html('/home/lgostiau/output.html')
+	return chemin
 
 	
 
@@ -152,6 +193,6 @@ if __name__ == '__main__':
 	import doctest
 	doctest.testmod()
 	import sys
-	sys.exit(main(sys.argv))
+	sys.exit(main())
 	
 	
