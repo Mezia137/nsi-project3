@@ -21,7 +21,7 @@ def test_denivele(trajet):
 def denivele(nombre_etapes, hauteur_min, hauteur_max):
     """
     nombre_etapes – entier strictement positif
-    hauteur_min, hauteur_max – entiers strictement positifs avec mini < maxi
+    hauteur_min, hauteur_max – entiers strictement positifs avec hauteur_min < hauteur_max
     Sortie : trajet – liste de nombre_etapes entiers aléatoires compris
              entre hauteur_min (inclus) et hauteur_max (inclus). Attention,
              deux éléments successifs doivent être distincts.
@@ -38,9 +38,8 @@ def denivele(nombre_etapes, hauteur_min, hauteur_max):
 
 def find_couples_max_indices(liste):
     """
-    trajet - liste d'entiers dont deux éléments successifs sont
-             distincts.
-    Sortie : liste des couples (indices, valeur) du plus grand élément
+    liste - liste de nombres.
+    Sortie : liste des couples (indice, valeur) du plus grand élément
              de la liste trajet.
     >>> find_couples_max_indices([2, 3, 2, 5, 4])
     [(3, 5)]
@@ -89,7 +88,7 @@ def duree_etapes(trajet):
     """
     trajet – liste d'entiers dont deux éléments successifs sont
              distincts.
-    Sortie : liste – durée de chaques étapes
+    Sortie : liste – liste de la durée de chaque étape.
     >>> sum(duree_etapes([2, 3, 2, 5, 4]))
     50
     >>> sum(duree_etapes([2, 8, 3, 8, 4, 8, 5, 6, 8]))
@@ -108,8 +107,8 @@ def duree_etapes(trajet):
 
 def temps_etapes(trajet):
     """
-    liste_duree – liste de la durée de chaques étapes
-    Sortie : liste – temps à chaques étapes
+    liste_duree – liste de la durée de chaque étape
+    Sortie : liste – liste du temps à chaque étape
     >>> temps_etapes([2, 3, 2, 5, 4])[-1]
     50
     >>> temps_etapes([2, 8, 3, 8, 4, 8, 5, 6, 8])[-1]
@@ -127,17 +126,25 @@ def temps_trajet(trajet):
     """
     chemin – liste d'entiers dont deux éléments successifs sont
              distincts.
-    Sortie : entier – temps de parcours de la liste
+    Sortie : entier – temps de parcours de la liste.
     >>> temps_trajet([2, 3, 2, 5, 4])
     50
     >>> temps_trajet([2, 8, 3, 8, 4, 8, 5, 6, 8])
     240
     """
-    return sum(duree_etapes(trajet))
-    # return temps_par_etapes(trajet)[-1]
+    return temps_etapes(trajet)[-1]
 
 
 def nb_sommets(trajet):
+    """
+    trajet – liste d'entiers dont deux éléments successifs sont
+             distincts.
+    Sortie : entier – nombre de "sommets" dans la liste.
+    >>> nb_sommets([2, 3, 2, 5, 4])
+    2
+    >>> nb_sommets([2, 8, 3, 8, 4, 8, 5, 6, 8])
+    3
+    """
     nombre_sommets = 0
     for i in range(1, len(trajet) - 1):
         if trajet[i - 1] < trajet[i] > trajet[i + 1]:

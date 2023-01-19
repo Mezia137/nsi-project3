@@ -9,7 +9,7 @@ print(f"Temps prévu de la randonnée : {interface.format_time(randonee.temps_tr
 
 
 
-# interface.show_turtle_interface(randonee.denivele(10, 1500, 2500))
+interface.show_turtle_interface(randonee.denivele(10, 1500, 2500))
 
 interface.plotly_interface(trajet,
                            randonee.temps_etapes(trajet),
@@ -19,5 +19,5 @@ interface.plotly_interface(trajet,
                            randonee.nb_hauts_sommets(trajet)[1],
                            randonee.nb_hauts_sommets(trajet)[0],
                            randonee.temps_trajet(trajet),
-                           output_file='./ExcursionAnalysis.html'
+                           output_file_html='./ExcursionAnalysis.html',
                            )
